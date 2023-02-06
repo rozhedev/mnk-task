@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>За методом найменших квадратів</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <h1>Обчислення за методом найменших квадратів</h1>
+
+    <div class="task">
+        <div class="task__inner">
+            <form action="#" class="task__form" id="task1-form">
+                <div class="form-controller">
+                    <input type="number" id="dots-count-inp" class="task__form-inp" placeholder="Введіть кількість точок">
+                    <small id="dots-count-message" class="task__form-message"></small>
+                </div>
+                <button type="button" id="count-apply-btn" class="task__form-btn">Задати</button>
+
+                <div class="form-controller">
+                    <input type="text" id="x-coordinates-inp" class="task__form-inp coordinates-inp" placeholder="Введіть X координати через пробіл">
+                    <small id="x-coordinates-message" class="task__form-message"></small>
+                </div>
+
+                <div class="form-controller">
+                    <input type="text" id="y-coordinates-inp" class="task__form-inp coordinates-inp" placeholder="Введіть Y координати через пробіл">
+                    <small id="y-coordinates-message" class="task__form-message"></small>
+                </div>
+                <button type="button" id="calc-btn" class="task__form-btn">Розрахувати</button>
+
+            </form>
+            <div class="task__output">Результат: <br>
+                <span id="line-graph-output"></span>
+                <br>
+                <span id="line-deviation-output"></span>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+
+</html>

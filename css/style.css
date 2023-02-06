@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --accent-color: #e7ab35;
+    --error-red: #cf603e;
+    --success-green:#38c678;
+    --text-color: #3B0F00;
+    --accent-shadow-color: #FFEDCB;
+    --light-color: #fff;
+    --gray-color: #888;
+}
+
+html {
+    font-size: 18px;
+    font-family: "Rubik", sans-serif;
+    color: var(--text-color);
+}
+
+/* * Обнуление стилей в input */
+
+input,
+button,
+textarea {
+    font-family: inherit;
+    transition: .6s all;
+}
+
+textarea {
+    resize: none;
+}
+
+:focus,
+:active {
+    outline: none;
+}
+
+input::-ms-clear {
+    display: none;
+}
+
+/* * Для Chrome */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+
+/* * Для Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+button {
+    border: none;
+    background-color: none;
+}
+
+h1 {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.task {
+    width: 55%;
+    margin: 20px auto 40px;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 6px 3px var(--gray-color);
+}
+
+.task__inner {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.task__form {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin-right: 40px;
+}
+
+.task__form-inp {
+    width: 100%;
+    padding: 7px 15px;
+    font-size: 18px;
+    border: 3px solid var(--gray-color);
+    border-radius: 10px;
+}
+
+.task__form-inp:nth-of-type(n+1) {
+    margin-bottom: 10px;
+}
+
+.task__form-inp:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 4px 2px var(--accent-shadow-color);
+}
+
+.form-controller._success .task__form-inp {
+    border-color: var(--success-green);
+    box-shadow: 0 0 4px 2px rgba(var(--success-green), 0.6);
+}
+
+.form-controller._error .task__form-inp {
+    border-color: var(--error-red);
+    box-shadow: 0 0 4px 2px rgba(var(--error-red), 0.6);
+}
+
+.task__form-message {
+    display: block;
+    margin: 5px 0 15px;
+}
+
+.task__form-btn {
+    margin: 0px auto;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 10px;
+    background-color: var(--accent-color);
+    cursor: pointer;
+}
+
+.task__form-btn:first-of-type {
+    margin-bottom: 30px;
+}
+
+.task__form-btn:hover {
+    background-color: var(--accent-shadow-color);
+}
+
+.task__output {
+    width: 50%;
+    padding: 15px;
+    border-radius: 10px;
+    line-height: 1.5;
+    background-color: var(--accent-shadow-color);
+}
+
