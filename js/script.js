@@ -1,5 +1,4 @@
 // * VARIABLES
-// TODO Transfer nodes & move intervals to one object. Create TEXT_ERRORS object
 
 const NODES = {
     dotsCountInp: document.querySelector("#dots-count-inp"),
@@ -26,6 +25,17 @@ const VALID_INT = {
 const STATE_LIST = {
     error: "_error",
     success: "_success",
+}
+
+const TEXT_ERRORS = {
+    intNum: "Число повинно бути цілим",
+    emptyInp: "Поле не може бути пустим",
+    minValue: `Мінімальне значення: ${VALID_INT.dotsValue.min}`,
+    maxValue: `Максимальне значення: ${VALID_INT.dotsValue.max}`,
+    emptyDotsCount: "Задайте кількість значень",
+    fractValue: "Дробові значення треба вводити через крапку",
+    invalidCount: "Кількість значень не відповідає заданій",
+    invalidValues: "Введені некоректні значення",
 }
 
 // * RegEX
@@ -55,66 +65,63 @@ function setSuccessFor(input, { error, success }) {
     small.textContent = "";
 }
 
-function clearInputs(inpArr) {
-    inpArr.forEach(inpArrItem => {
-        inpArrItem.value = "";
-    });
-}
-
 // * Check some number
-function checkInp(inp, { min, max }) {
+function checkInp(
+    inp,
+    { min, max },
+    { intNum, emptyInp, minValue, maxValue }
+) {
     let inpValue = +inp.value;
-    if (inp.value.includes(".") || inp.value.includes(",")) {
-        setErrorFor(inp, "Число повинно бути цілим", STATE_LIST);
-    } else if (inpValue == "") {
-        setErrorFor(inp, "Поле не може бути пустим", STATE_LIST);
-    } else if (inpValue < min) {
-        setErrorFor(inp, `Мінімальне значення: ${min}`, STATE_LIST);
-    } else if (inpValue > max) {
-        setErrorFor(inp, `Максимальне значення: ${max}`, STATE_LIST);
-    } else {
-        setSuccessFor(inp, STATE_LIST);
-    }
+
+    if (inp.value.includes(".") || inp.value.includes(",")) setErrorFor(inp, intNum, STATE_LIST);
+    else if (inpValue == "") setErrorFor(inp, emptyInp, STATE_LIST);
+    else if (inpValue < min) setErrorFor(inp, minValue, STATE_LIST);
+    else if (inpValue > max) setErrorFor(inp, maxValue, STATE_LIST);
+    else setSuccessFor(inp, STATE_LIST);
 }
 
 // * Validate inputs with array values
 function validateValueArr(
-    inp, countInp, numRegex, wordRegex, { min, max }, { success }
+    inp, countInp, numRegex, wordRegex,
+    { min, max },
+    { emptyInp, minValue, maxValue, emptyDotsCount, fractValue, invalidCount, invalidValues },
+    { success }
 ) {
     let inpValue = inp.value;
     let countInpValue = countInp.value;
     let numArr = [];
 
     if (inpValue == "") {
-        setErrorFor(inp, "Поле не може бути пустим", STATE_LIST);
+        setErrorFor(inp, emptyInp, STATE_LIST);
 
     } else if (!countInp.parentElement.classList.contains(success)) {
-        setErrorFor(countInp, "Задайте кількість значень", STATE_LIST);
+        setErrorFor(countInp, emptyDotsCount, STATE_LIST);
 
     } else if (inp.value.includes(",")) {
-        setErrorFor(inp, "Дробові значення треба вводити через крапку", STATE_LIST);
+        setErrorFor(inp, fractValue, STATE_LIST);
 
     } else if (!wordRegex.test(inpValue)) {
         numArr = inpValue.match(numRegex);
-        
+
         for (let i = 0; i < numArr.length; i++) {
             numArr[i] = +numArr[i];
-            if (numArr[i] < min) {
-                setErrorFor(inp, `Одне із значень менше мін. допустимого значення ${min}`, STATE_LIST);
+            if (+numArr[i] < min) {
+                setErrorFor(inp, minValue, STATE_LIST);
                 return;
-            } else if (numArr[i] > max) {
-                setErrorFor(inp, `Одне із значень більше макс. допустимого значення ${max}`, STATE_LIST);
+            } else if (+numArr[i] > max) {
+                setErrorFor(inp, maxValue, STATE_LIST);
+                return;
             }
         }
         if (numArr.length == countInpValue) {
             setSuccessFor(inp, STATE_LIST);
             return numArr;
         } else {
-            setErrorFor(inp, "Кількість значень не відповідає заданій", STATE_LIST);
+            setErrorFor(inp, invalidCount, STATE_LIST);
         }
 
     } else {
-        setErrorFor(inp, "Введені некоректні значення", STATE_LIST);
+        setErrorFor(inp, invalidValues, STATE_LIST);
     }
 }
 
@@ -150,7 +157,7 @@ function calcDeterminant(arrX, arrY) {
 
 if (NODES.countApplyBtn) {
     NODES.countApplyBtn.addEventListener("click", function () {
-        checkInp(NODES.dotsCountInp, VALID_INT.dotsCount);
+        checkInp(NODES.dotsCountInp, VALID_INT.dotsCount, TEXT_ERRORS);
     });
 }
 
@@ -162,33 +169,40 @@ if (NODES.calcBtn) {
 
         // * Fill the array on full length
         for (let i = 0; i <= calcDeterminant.length; i++) {
-            resultArr[i] = calcDeterminant(
-                validateValueArr(
-                    NODES.xAxisInp,
-                    NODES.dotsCountInp,
-                    numCheckRegex,
-                    wordCheckRegex,
-                    VALID_INT.dotsValue,
-                    STATE_LIST
-                ),
-                validateValueArr(
-                    NODES.yAxisInp,
-                    NODES.dotsCountInp,
-                    numCheckRegex,
-                    wordCheckRegex,
-                    VALID_INT.dotsValue,
-                    STATE_LIST
-                )
-            )[i];
-        }
-        conditionValue = resultArr[1];
+            let xAxisTemp = validateValueArr(
+                NODES.xAxisInp,
+                NODES.dotsCountInp,
+                numCheckRegex,
+                wordCheckRegex,
+                VALID_INT.dotsValue,
+                TEXT_ERRORS,
+                STATE_LIST
+            );
+            let yAxisTemp = validateValueArr(
+                NODES.yAxisInp,
+                NODES.dotsCountInp,
+                numCheckRegex,
+                wordCheckRegex,
+                VALID_INT.dotsValue,
+                TEXT_ERRORS,
+                STATE_LIST
+            );
+            if (
+                NODES.dotsCountInp.parentElement.classList.contains(STATE_LIST.success) &&
+                NODES.xAxisInp.parentElement.classList.contains(STATE_LIST.success) &&
+                NODES.yAxisInp.parentElement.classList.contains(STATE_LIST.success)
+            ) {
+                resultArr[i] = calcDeterminant(xAxisTemp, yAxisTemp)[i];
 
-        if (conditionValue > 0) {
-            NODES.graphOutput.textContent = `Аппроксимуюча пряма: y = ${resultArr[0]}x + ${resultArr[1]}`;
-            NODES.deviationOutput.textContent = `Середнє квадратичне відхилення: ${resultArr[2]}`;
-        } else {
-            NODES.graphOutput.textContent = `Аппроксимуюча пряма: y = ${resultArr[0]}x - ${Math.abs(resultArr[1])}`;
-            NODES.deviationOutput.textContent = `Середнє квадратичне відхилення: ${resultArr[2]}`;
+                conditionValue = resultArr[1];
+                if (conditionValue > 0) {
+                    NODES.graphOutput.textContent = `Аппроксимуюча пряма: y = ${resultArr[0]}x + ${resultArr[1]}`;
+                    NODES.deviationOutput.textContent = `Середнє квадратичне відхилення: ${resultArr[2]}`;
+                } else {
+                    NODES.graphOutput.textContent = `Аппроксимуюча пряма: y = ${resultArr[0]}x - ${Math.abs(resultArr[1])}`;
+                    NODES.deviationOutput.textContent = `Середнє квадратичне відхилення: ${resultArr[2]}`;
+                }
+            }
         }
     });
 }
